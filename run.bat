@@ -1,3 +1,4 @@
-"pip" "install" "requests"
-"C:\Python310\python.exe" "C:\Users\Alex Shockley\Desktop\CSProjects\NFT_Tracker\script.py"
+pip install requests
+pip install openpyxl
+python "script.py"
 pause
