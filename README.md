@@ -1,2 +1,2 @@
-# NFTracker
+## NFTracker
 Tracks stats of NFTs
