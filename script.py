@@ -11,6 +11,7 @@ fileExist = True
 
 
 fileName = 'collections' + '.xlsx'
+
 if(not exists(fileName)):
     print('File',fileName,'not Found, Creating now...')
     workbook = openpyxl.Workbook()
@@ -145,8 +146,10 @@ def toCSV(name, row):
         writeRow(header,wb[name],"1")
         wb[name].insert_rows(2)
         writeRow(row,wb[name],"2")
-    
-    writeOverview()
+    try:
+        writeOverview()
+    except:
+        print('No previous data to pull from, overview values are all 0')
     wb.save('collections.xlsx')
     
 
