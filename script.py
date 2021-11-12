@@ -36,10 +36,10 @@ def colorCell(c1,c2):
 def calcHexColorVal(num):
     return 0
 wb = openpyxl.load_workbook('collections.xlsx', read_only=False)   # open an Excel file and return a workbook
-def writeRow(row, sheet,rowNum):
+def writeRow(row, sheet,rowNum,offset=0):
     alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S']
     for i in range(len(row)):
-        sheet[alphabet[i] + rowNum] = row[i]
+        sheet[alphabet[i + offset] + str(rowNum)] = row[i]
     colorCell(sheet['B2'],sheet['B3'])    
     
         
@@ -48,7 +48,21 @@ def getFilePath():
     data = json.load(f)
     print('CSV File location:',data['path_to_csv_files'],'\n\n')
     return data['path_to_csv_files']
-filePath = getFilePath()
+#filePath = getFilePath()
+def writeOverview():
+    wb['Sheet'].delete_rows(1)
+    wb['Sheet'].delete_rows(1)
+    wb['Sheet'].insert_rows(1)
+    wb['Sheet'].insert_rows(1)
+    sheetNames = wb.sheetnames
+    sheetNames = sheetNames[1:]
+    writeRow(sheetNames,wb['Sheet'],"1", offset=1)
+    values = ['Percent Change']
+    for sheet in sheetNames:
+        if sheet == wb['Sheet']:
+            continue
+        values.append(calcPercentIncrease(wb[sheet]['B2'].value,wb[sheet]['B3'].value))
+    writeRow(values,wb['Sheet'],2)
 def collectStats(collectionToFind,cryptoPrice):
     url = "https://api.opensea.io/api/v1/collection/"
     url += collectionToFind 
@@ -131,6 +145,8 @@ def toCSV(name, row):
         writeRow(header,wb[name],"1")
         wb[name].insert_rows(2)
         writeRow(row,wb[name],"2")
+    
+    writeOverview()
     wb.save('collections.xlsx')
     
 
@@ -145,17 +161,17 @@ with open('collections.txt') as collections:
         
         stats = (collectStats(line,cryptoPrice))
             
-        #toCSV(line,stats)
-        try:
-            stats = (collectStats(line,cryptoPrice))
-            try:
-                toCSV(line, stats)
-            except:
-                print("\n\n================ERROR WITH CSV FILE================")
-                print('Make sure that the .csv file is not open by another program')
-        except:
-            print('\n\n================INVALID COLLECTION NAME================')
-            print('Invalid collection:',line)
-            print('Ensure that the name is the one that appears in the url of collection\n\n')
+        toCSV(line,stats)
+        # try:
+        #     stats = (collectStats(line,cryptoPrice))
+        #     try:
+        #         toCSV(line, stats)
+        #     except:
+        #         print("\n\n================ERROR WITH CSV FILE================")
+        #         print('Make sure that the .csv file is not open by another program')
+        # except:
+        #     print('\n\n================INVALID COLLECTION NAME================')
+        #     print('Invalid collection:',line)
+        #     print('Ensure that the name is the one that appears in the url of collection\n\n')
         
         
