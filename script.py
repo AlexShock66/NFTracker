@@ -32,7 +32,7 @@ def colorCell(c1,c2):
             c1.fill = red
         
     except:
-        print('FirstCell in sheet so no color')
+        print('FirstCell in sheet so no color OR no change')
 def calcHexColorVal(num):
     return 0
 wb = openpyxl.load_workbook('collections.xlsx', read_only=False)   # open an Excel file and return a workbook
@@ -161,17 +161,17 @@ with open('collections.txt') as collections:
         
         stats = (collectStats(line,cryptoPrice))
             
-        toCSV(line,stats)
-        # try:
-        #     stats = (collectStats(line,cryptoPrice))
-        #     try:
-        #         toCSV(line, stats)
-        #     except:
-        #         print("\n\n================ERROR WITH CSV FILE================")
-        #         print('Make sure that the .csv file is not open by another program')
-        # except:
-        #     print('\n\n================INVALID COLLECTION NAME================')
-        #     print('Invalid collection:',line)
-        #     print('Ensure that the name is the one that appears in the url of collection\n\n')
+        
+        try:
+            stats = (collectStats(line,cryptoPrice))
+            try:
+                toCSV(line, stats)
+            except:
+                print("\n\n================ERROR WITH CSV FILE================")
+                print('Make sure that the .csv file is not open by another program')
+        except:
+            print('\n\n================INVALID COLLECTION NAME================')
+            print('Invalid collection:',line)
+            print('Ensure that the name is the one that appears in the url of collection\n\n')
         
         
